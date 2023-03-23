@@ -50,6 +50,9 @@ if (config.env === 'production') {
   app.use('/v1/auth', authLimiter);
 }
 
+app.use('/', (req, res, next) => {
+  res.send('Greed N Fear rules!');
+});
 // v1 api routes
 app.use('/v1', routes);
 // For Testing
