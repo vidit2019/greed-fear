@@ -50,12 +50,13 @@ setInterval(() => {
   console.log(indianTime); // output: 11:30:00 AM
 
   if (indianTime > '9:10:00 AM' && indianTime < '3:40:00 PM' && !isNiftyJobRunning) {
+    console.log('here');
     niftyJob.start();
   }
   if (indianTime > '3:40:00 PM' && isNiftyJobRunning) {
     niftyJob.stop();
     isNiftyJobRunning = false;
   }
-}, 2 * 60 * 1000);
+}, 1 * 30 * 1000);
 
 // module.exports = { niftyJobInit };
