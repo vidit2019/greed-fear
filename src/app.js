@@ -51,7 +51,7 @@ app.options('*', cors());
 // }
 
 app.use('/', (req, res, next) => {
-  res.send('Greed N Fear rules!');
+  res.send(`Greed N Fear rules! ${global.isNiftyJobRunning}`);
 });
 // v1 api routes
 app.use('/v1', routes);

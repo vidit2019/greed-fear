@@ -3,13 +3,13 @@ const logger = require('../config/logger');
 const { runScript } = require('../nifty/script');
 
 logger.info('reached niftyOI Controller');
-let isNiftyJobRunning = false;
+global.isNiftyJobRunning = false;
 
 const niftyJob = cron.schedule(
   '* * * * *',
   () => {
     logger.info('Running a job at every minute');
-    isNiftyJobRunning = true;
+    global.isNiftyJobRunning = true;
     runScript();
   },
   {
@@ -18,7 +18,7 @@ const niftyJob = cron.schedule(
 );
 
 cron.schedule(
-  '59 11 * * 1-5',
+  '5 9 * * 1-5',
   () => {
     logger.info('Running a job at 09:00 at Asia/Kolkata timezone');
     niftyJob.start();
@@ -43,19 +43,26 @@ cron.schedule(
 
 setInterval(() => {
   /** if currentime is greater then 3:40 IST then stop niftyJob */
-  const now = new Date();
-  const options = { timeZone: 'Asia/Kolkata' };
-  const indianTime = now.toLocaleTimeString('en-IN', options);
+  const currentTime = new Date();
 
-  console.log(indianTime); // output: 11:30:00 AM
+  const desiredStartTime = new Date();
+  desiredStartTime.setHours(9, 5, 0, 0); // Set desired time to 9:05 AM
 
-  if (indianTime > '9:10:00 AM' && indianTime < '3:40:00 PM' && !isNiftyJobRunning) {
-    console.log('here');
+  const desiredEndTime = new Date();
+  desiredEndTime.setHours(15, 40, 0, 0); // Set desired time to 3:40 PM
+
+  if (
+    currentTime.getTime() > desiredStartTime.getTime() &&
+    currentTime.getTime() < desiredEndTime.getTime() &&
+    !global.isNiftyJobRunning
+  ) {
+    logger.info('some how the scripts was not started , starting it now');
     niftyJob.start();
   }
-  if (indianTime > '3:40:00 PM' && isNiftyJobRunning) {
+
+  if (currentTime.getTime() > desiredEndTime.getTime() && global.isNiftyJobRunning) {
+    logger.info('some how the scripts was not stopped , stopping it now');
     niftyJob.stop();
-    isNiftyJobRunning = false;
   }
 }, 1 * 30 * 1000);
 
