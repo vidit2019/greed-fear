@@ -83,8 +83,8 @@ const calculations = (dataArray, type) => {
 
 const runScript = async () => {
   try {
-    const { expiryDates, data, strikePrices } = await getDataFromNSE(dataURL);
-
+    const { expiryDates = false, data, strikePrices } = await getDataFromNSE(dataURL);
+    if (!expiryDates) return;
     /** sort data for relevant expiry date, 0th element */
 
     /** check if its thursday closing */

@@ -63,6 +63,7 @@ setInterval(() => {
   if (currentTime.getTime() > desiredEndTime.getTime() && global.isNiftyJobRunning) {
     logger.info('some how the scripts was not stopped , stopping it now');
     niftyJob.stop();
+    global.isNiftyJobRunning = false;
   }
 }, 1 * 30 * 1000);
 
